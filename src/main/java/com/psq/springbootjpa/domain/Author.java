@@ -1,8 +1,6 @@
 package com.psq.springbootjpa.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,7 +12,21 @@ public class Author {
     private String nickName;
     private String phone;
     private Date signDate;
+
+    // update wallet in author will change wallet wallet
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "author_wallet_id")
+    private Wallet wallet;
+
     public Author() {
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     public Long getId() {

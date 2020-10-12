@@ -3,6 +3,8 @@ package com.psq.springbootjpa;
 import com.alibaba.fastjson.JSON;
 import com.psq.springbootjpa.domain.Author;
 import com.psq.springbootjpa.domain.AuthorRepository;
+import com.psq.springbootjpa.domain.Wallet;
+import com.psq.springbootjpa.domain.WalletRepository;
 import com.psq.springbootjpa.service.AuthorService;
 import net.minidev.json.JSONArray;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
@@ -25,15 +28,46 @@ public class AuthorTest {
     private AuthorRepository authorRepository;
 
     @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
     private AuthorService authorService;
 
     @Test
     public void saveAuthorTest() {
         Author author = new Author();
         author.setNickName("Yegar");
-        author.setPhone("1111111");
+        author.setPhone("13801231234");
         author.setSignDate(new Date());
+        author.setWallet(new Wallet(new BigDecimal(188.23)));
         authorRepository.save(author);
+    }
+
+    @Test
+    public void updateAuthor() {
+        Author author = authorService.findAuthor(11L);
+        author.setPhone("158012312345");
+        Wallet wallet = author.getWallet();
+        wallet.setBalance(new BigDecimal(888.88));
+        author.setWallet(wallet);
+        authorService.updateAuthor(author);
+    }
+
+    @Test
+    public void findAuthorTest() {
+        Author author = authorService.findAuthor(11L);
+        System.out.println(JSON.toJSONString(author,true));
+    }
+
+    @Test
+    public void deleteAuthorTest() {
+        authorService.deleteAuthor(11L);
+    }
+
+    @Test
+    public void findWalletAuthorTest() {
+        Wallet wallet = walletRepository.findById(14L).orElse(null);
+        System.out.println(JSON.toJSONString(wallet,true));
     }
 
     @Test
